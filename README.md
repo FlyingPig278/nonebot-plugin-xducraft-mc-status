@@ -56,7 +56,7 @@
 ## 安装与加载
 
 > [!NOTE]  
-> 本软件包目前尚未发布至公共 PyPI 仓库。安装请使用预定推送的 GitHub Release Tag 源码链接。
+> 本软件包尚未发布至公共 PyPI 仓库，请使用 Git 标签安装。
 
 ### 1. 宿主环境安装
 
@@ -104,7 +104,7 @@ python -m build
 
 ### 调试工具使用
 
-仓库内 `scripts/` 目录提供了免启动机器人的本地离线渲染脚本：
+仓库内 `scripts/` 目录提供了免启动机器人的本地离线渲染脚本。这些工具在克隆仓库根目录下直接运行，使用无 Web 驱动（`~none`），无需安装 FastAPI，亦无需运行中的 Bot 实例或网络连接：
 
 ```bash
 # 1. 离线状态图渲染预览（使用假数据验证排版）
@@ -115,7 +115,6 @@ python scripts/preview_mc_status.py --list
 python scripts/preview_mc_texture.py dirt
 python scripts/preview_mc_texture.py cyan_glazed_terracotta --size 512
 ```
-
 ---
 
 ## 数据存储与历史迁移

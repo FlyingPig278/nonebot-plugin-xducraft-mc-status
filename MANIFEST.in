@@ -1,1 +1,3 @@
 recursive-include tests *.py
+recursive-include scripts *.py *.md
+include scripts/mc_status_backend/.env.example

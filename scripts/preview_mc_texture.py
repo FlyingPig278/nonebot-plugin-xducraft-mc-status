@@ -19,7 +19,7 @@ from pathlib import Path
 
 import nonebot  # noqa: E402
 
-nonebot.init()
+nonebot.init(driver="~none")
 
 from xducraft_mc_status import image_renderer as ir  # noqa: E402
 from xducraft_mc_status import raster  # noqa: E402

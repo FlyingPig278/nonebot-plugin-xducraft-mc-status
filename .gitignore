@@ -33,3 +33,4 @@ dist/
 *.sqlite
 *.sqlite3
 !*.example
+/preview/

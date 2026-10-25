@@ -27,7 +27,7 @@ from typing import Any, Callable, Dict
 
 import nonebot  # noqa: E402
 
-nonebot.init()
+nonebot.init(driver="~none")
 
 from xducraft_mc_status import image_renderer as ir  # noqa: E402
 from xducraft_mc_status import settings as cfg  # noqa: E402
