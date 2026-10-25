@@ -1,0 +1,21 @@
+LicenseRef-Legacy-Assets
+========================
+
+This identifier marks preserved legacy resources for which this project
+has not established a redistribution license. It is NOT an open-source
+license and does NOT grant permission to use, copy, modify or redistribute
+those resources. Inclusion in this repository does not relicense them.
+
+Covered files:
+- resources/fonts/minecraft-ten.ttf
+- resources/fonts/Minecraft AE.ttf
+- resources/textures/*.png
+- resources/images/default_server_icon.png
+- resources/images/fire.png
+- resources/images/offline_server_icon.png
+
+Original copyrights and any applicable rightsholder terms continue to
+apply. See NOTICE for embedded attributions, provenance uncertainties,
+and Minecraft's EULA and Usage Guidelines. Obtain the necessary rights
+from the respective rightsholders before redistribution or other uses
+requiring permission.
