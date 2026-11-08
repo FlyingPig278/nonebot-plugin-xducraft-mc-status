@@ -18,7 +18,7 @@
 
 ```bash
 pip install "nonebot-plugin-xducraft-core[onebot] @ git+https://github.com/FlyingPig278/nonebot-plugin-xducraft-core.git@v0.3.0"
-pip install "nonebot-plugin-xducraft-mc-status @ git+https://github.com/FlyingPig278/nonebot-plugin-xducraft-mc-status.git@v0.1.0"
+pip install "nonebot-plugin-xducraft-mc-status @ git+https://github.com/FlyingPig278/nonebot-plugin-xducraft-mc-status.git@f8654908344e647750c36a648ac2a13b4ff83af0"
 
 # 可选：安装管理面板插件
 pip install "nonebot-plugin-xducraft-admin @ git+https://github.com/FlyingPig278/nonebot-plugin-xducraft-admin.git@v0.1.0"
