@@ -11,7 +11,7 @@ from xducraft_bot.shared.data_paths import plugin_data_dir
 from xducraft_bot.shared.json_store import as_bool, as_str
 
 from .auth_mode import CONFIGURABLE_MODES
-from .constants import DEFAULT_SERVER_PRIORITY, LEGACY_DATA_PATH
+from .constants import DEFAULT_EDITOR_URL, DEFAULT_SERVER_PRIORITY, LEGACY_DATA_PATH
 
 DATA_DIR = str(plugin_data_dir(
     "mc_status",
@@ -77,6 +77,8 @@ def _normalize_data(raw: Any) -> Dict[str, Any]:
     legacy = raw.get(SCHEMA_VERSION_KEY) != 2
     global_raw = raw.get("__global__")
     global_raw = global_raw if isinstance(global_raw, dict) else {}
+    if "editor_url" in global_raw:
+        data["__global__"] = {"editor_url": as_str(global_raw["editor_url"]).strip()}
     legacy_source = _normalize_source(global_raw.get("status_api_source"), DEFAULT_API_SOURCE)
     legacy_url = as_str(global_raw.get("status_api_url"))
     known_groups = set(feature_gate.list_configured_groups()) if legacy else set()
@@ -176,6 +178,21 @@ def configure_storage(database_path: str, *, legacy_path: Optional[str] = None) 
         "mc_status", _default_data,
         _normalize_data, database_path=database_path, legacy_path=legacy_path,
     )
+
+
+def get_editor_url() -> str:
+    return _store.load().get("__global__", {}).get("editor_url") or DEFAULT_EDITOR_URL
+
+
+def set_editor_url(url: str) -> bool:
+    def mutate(data: Dict[str, Any]) -> bool:
+        settings = data.setdefault("__global__", {})
+        if settings.get("editor_url") == url:
+            return False
+        settings["editor_url"] = url
+        return True
+
+    return bool(_store.mutate(mutate))
 
 
 # --- 内部访问器 ---
@@ -513,6 +530,7 @@ def list_configured_groups() -> List[int]:
 __all__ = [
     "DATA_DIR", "DATA_FILE", "SCHEMA_VERSION_KEY", "VALID_API_SOURCES", "DEFAULT_API_SOURCE",
     "SERVER_ATTRIBUTE_DEFAULTS", "configure_storage",
+    "get_editor_url", "set_editor_url",
     "get_server_list", "get_all_servers_flat", "get_server_info",
     "add_server", "remove_server", "set_server_attribute", "clear_server_attribute",
     "get_footer", "add_footer", "clear_footer",

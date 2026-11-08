@@ -13,6 +13,7 @@ import time
 from dataclasses import dataclass
 from functools import wraps
 from typing import Any, Callable, Dict, List, Optional, Tuple
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, MessageSegment, PrivateMessageEvent
 from nonebot.log import logger
@@ -23,11 +24,11 @@ from xducraft_bot.shared.permissions import is_admin
 
 from . import auth_mode as auth
 from .config_coder import compress_config, decompress_config
-from .constants import USAGE_ADMIN, USAGE_USER, WEB_UI_BASE_URL
+from .constants import USAGE_ADMIN, USAGE_USER
 from .data_manager import (
     VALID_API_SOURCES, add_footer, add_server, clear_footer,
     clear_group_status_api_source, clear_group_status_api_url,
-    clear_server_attribute, export_group_data, get_all_servers_flat, get_auth_detect_enabled,
+    clear_server_attribute, export_group_data, get_all_servers_flat, get_auth_detect_enabled, get_editor_url,
     get_group_default_auth_mode, get_group_status_api_source, get_group_status_api_url,
     get_quiet_admin_replies, get_server_info, get_server_list, import_group_data, remove_server,
     set_auth_detect_enabled, set_group_default_auth_mode, set_group_status_api_source,
@@ -694,7 +695,10 @@ async def _handle_edit(bot: Bot, event: GroupMessageEvent, arg_list: List[str]):
     if not compressed:
         await matcher.finish("导出失败：压缩配置时出错，请联系维护者查看日志。")
 
-    export_url = f"{WEB_UI_BASE_URL}?data={compressed}"
+    editor = urlsplit(get_editor_url())
+    query = [(key, value) for key, value in parse_qsl(editor.query, keep_blank_values=True) if key != "data"]
+    query.append(("data", compressed))
+    export_url = urlunsplit(editor._replace(query=urlencode(query)))
 
     sent = await notify_privately(
         bot, user_id,

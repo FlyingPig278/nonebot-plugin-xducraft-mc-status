@@ -3,14 +3,15 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator, model_validator
+from pydantic import AnyHttpUrl, Field, StrictBool, StrictInt, StrictStr, field_validator, model_validator
 
 from xducraft_bot.shared.configuration import (
     ConfigModel, ConfigResource, ConfigSnapshot, ConfigurationError,
-    PluginConfiguration, StartupConfig, declare_config,
+    PluginConfiguration, StartupConfig, declare_config, validate_values,
 )
 from xducraft_bot.shared.deployment_config import get_startup_base, read_overrides
 from . import data_manager as dm, settings
+from .constants import DEFAULT_EDITOR_URL
 from .utils import is_valid_api_url, is_valid_server_address
 
 AuthMode = Literal["", "official", "mua", "xdu", "yggdrasil", "offline", "mixed"]
@@ -76,6 +77,29 @@ class MCGroup(ConfigModel):
                 walk(node.children, depth + 1)
         walk(self.servers, 0)
         return self
+
+
+class MCGlobal(ConfigModel):
+    editor_url: StrictStr = Field(
+        DEFAULT_EDITOR_URL, title="编辑器地址",
+        description="用于 /mcs edit，保存后新生成的链接立即生效。",
+        json_schema_extra=ui("网页编辑器", 0, scope="global"),
+    )
+
+    @field_validator("editor_url")
+    @classmethod
+    def editor_address(cls, value):
+        value = value.strip()
+        AnyHttpUrl(value)
+        return value
+
+
+def read_global(ctx):
+    return ConfigSnapshot({"editor_url": dm.get_editor_url()})
+
+
+def write_global(ctx, values):
+    dm.set_editor_url(validate_values(MCGlobal, values)["editor_url"])
 
 
 
@@ -168,7 +192,10 @@ def validate_startup(values):
 
 DECLARATION = declare_config(PluginConfiguration(
     key="mc_status", name="MC 服务器状态", feature_keys=("mc_status",),
-    resources={"group": ConfigResource(MCGroup, read_group, write_group)},
+    resources={
+        "global": ConfigResource(MCGlobal, read_global, write_global),
+        "group": ConfigResource(MCGroup, read_group, write_group),
+    },
     list_groups=dm.list_configured_groups,
     startup=StartupConfig(MCStartup, active_startup, base_startup, normalize_startup,
                           validate_startup, startup_metadata),

@@ -60,8 +60,8 @@ HTML_COLOR_CODES = {
 
 DEFAULT_SERVER_PRIORITY = 100
 
-#: Web 编辑器地址，``/mcs edit`` 会拼上压缩后的配置生成链接。
-WEB_UI_BASE_URL = "https://edit.flyingpig278.com/"
+#: 未配置时使用的网页编辑器地址。
+DEFAULT_EDITOR_URL = "https://edit.flyingpig278.com/"
 
 #: 生成的图片保留时长（秒）。超过就清掉，避免 data/images 无限增长。
 RENDERED_IMAGE_TTL = 10 * 60
